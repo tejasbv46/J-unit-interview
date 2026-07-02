@@ -1,402 +1,234 @@
-# J-unit-interview
-jnuit interview question and last minute prep
-If you're preparing for Java backend/SDE interviews, learning JUnit 5 is one of the most valuable testing skills. Here's a complete roadmap from basic to advanced.
+# JUnit Interview Prep
 
-1. What is JUnit?
+A concise, organized guide to JUnit 5 for Java backend / SDE interview preparation and last-minute revision.
 
-JUnit is the most popular testing framework for Java.
+## Table of Contents
 
-It is used to:
+- [Overview](#overview)
+- [Why JUnit?](#why-junit)
+- [Prerequisites](#prerequisites)
+- [Maven Dependency](#maven-dependency)
+- [Project Structure](#project-structure)
+- [Quick Example](#quick-example)
+  - [Calculator.java](#calculatorjava)
+  - [CalculatorTest.java](#calculatortestjava)
+- [Assertions (Common)](#assertions-common)
+- [Lifecycle Annotations](#lifecycle-annotations)
+- [Parameterized Tests](#parameterized-tests)
+- [Other Useful Features](#other-useful-features)
+- [Mockito and Spring Boot Testing](#mockito-and-spring-boot-testing)
+- [Best Practices](#best-practices)
+- [Common Interview Questions](#common-interview-questions)
+- [Learning Path](#learning-path)
 
-Test Java methods automatically
-Find bugs before deployment
-Ensure code changes don't break existing features
-Support Test-Driven Development (TDD)
+---
 
-Example:
+## Overview
 
-Instead of manually running:
+JUnit is the most widely used unit-testing framework for Java. Mastering JUnit 5 (JUnit Jupiter) helps you write reliable unit tests, catch regressions early, and demonstrate strong testing skills in interviews.
 
-Calculator c = new Calculator();
-System.out.println(c.add(2,3));
+## Why JUnit?
 
-JUnit automatically checks whether the output is correct.
+- Automates verification of code behavior.
+- Speeds up development and refactoring.
+- Encourages Test-Driven Development (TDD).
+- Widely adopted across companies and projects.
 
-2. Why use JUnit?
+## Prerequisites
 
-Without JUnit
+- Java 8 or newer (features like lambda help tests).
+- A build tool: Maven or Gradle.
 
-Run application
-Call method
-Check output manually
-Repeat every time
+## Maven Dependency
 
-With JUnit
+Add JUnit Jupiter to your test scope (Maven example):
 
-Write test once
-Click Run Tests
-JUnit verifies everything automatically
-
-Benefits:
-
-Saves time
-Detects bugs early
-Makes refactoring safer
-Improves code quality
-Widely used in companies
-3. JUnit Versions
-JUnit 3 (old)
-JUnit 4
-JUnit 5 (current and recommended)
-
-Most companies use JUnit 5.
-
-4. JUnit Architecture
-
-JUnit 5 consists of:
-
-Platform
-Runs tests
-Jupiter
-Main API you write
-Vintage
-Supports old JUnit 4 tests
-5. Maven Dependency
+```xml
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter</artifactId>
     <version>5.13.4</version>
     <scope>test</scope>
 </dependency>
-6. Folder Structure
-src
- ├── main
- │     └── java
- │           Calculator.java
- │
- └── test
-       └── java
-             CalculatorTest.java
+```
 
-Production code goes in
+Run tests with `mvn test` (Maven Surefire / Failsafe plugins configured as usual).
 
-src/main/java
+## Project Structure
 
-Tests go in
+Standard Maven layout:
 
-src/test/java
-7. First Example
+```
+src/
+ ├── main/
+ │    └── java/
+ │         └── (production classes)
+ └── test/
+      └── java/
+           └── (test classes)
+```
 
-Calculator
+Place production code in `src/main/java` and tests in `src/test/java`.
 
+## Quick Example
+
+Calculator.java
+
+```java
 public class Calculator {
-
-    public int add(int a, int b){
-        return a+b;
+    public int add(int a, int b) {
+        return a + b;
     }
-
 }
+```
 
-Test
+CalculatorTest.java
 
+```java
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CalculatorTest {
-
     @Test
     void testAdd() {
         Calculator c = new Calculator();
-        assertEquals(5, c.add(2,3));
+        assertEquals(5, c.add(2, 3));
     }
-
 }
-8. What is @Test?
+```
 
-Marks a method as a test.
+## Assertions (Common)
 
-@Test
-void checkAddition(){
-
-}
-
-JUnit automatically runs it.
-
-9. Assertions
-
-Assertions compare expected and actual values.
-
-assertEquals()
-assertEquals(10, sum);
-assertNotEquals()
-assertNotEquals(5, sum);
-assertTrue()
-assertTrue(age>18);
-assertFalse()
-assertFalse(list.isEmpty());
-assertNull()
-assertNull(obj);
-assertNotNull()
-assertNotNull(obj);
-assertSame()
-
-Checks if both references point to the same object.
-
-assertSame(obj1,obj2);
-assertNotSame()
-assertNotSame(obj1,obj2);
-assertArrayEquals()
-assertArrayEquals(expected, actual);
-assertIterableEquals()
-assertIterableEquals(list1,list2);
-assertThrows()
-
-Checks exceptions.
-
-assertThrows(
-    ArithmeticException.class,
-    () -> {
-        int x=10/0;
-    }
-);
-assertDoesNotThrow()
-assertDoesNotThrow(() -> calculator.divide(10,2));
-assertAll()
-
-Runs multiple assertions.
-
-assertAll(
-    ()->assertEquals(10,sum),
-    ()->assertTrue(age>18),
-    ()->assertNotNull(name)
-);
-10. Lifecycle Annotations
-@BeforeEach
-
-Runs before every test.
-
-@BeforeEach
-void setup(){
-
-}
-@AfterEach
-
-Runs after every test.
-
-@AfterEach
-void cleanup(){
-
-}
-@BeforeAll
-
-Runs once before all tests.
-
-@BeforeAll
-static void init(){
-
-}
-
-Must be static by default.
-
-@AfterAll
-
-Runs once after all tests.
-
-@AfterAll
-static void close(){
-
-}
-
-Execution
-
-@BeforeAll
-
-@BeforeEach
-Test1
-@AfterEach
-
-@BeforeEach
-Test2
-@AfterEach
-
-@AfterAll
-11. @DisplayName
-@DisplayName("Addition Test")
-
-Shows a readable name.
-
-12. @Disabled
-
-Skips a test.
-
-@Disabled
-@Test
-void test(){
-
-}
-13. @RepeatedTest
-@RepeatedTest(5)
-void repeat(){
-
-}
-
-Runs 5 times.
-
-14. @ParameterizedTest
-
-Runs the same test with multiple values.
-
-@ParameterizedTest
-@ValueSource(ints={1,2,3,4})
-void testPositive(int value){
-    assertTrue(value>0);
-}
-15. @ValueSource
-@ValueSource(strings={"Java","JUnit"})
-16. @CsvSource
-@ParameterizedTest
-@CsvSource({
-"2,3,5",
-"5,6,11",
-"10,20,30"
-})
-void testAdd(int a,int b,int expected){
-    assertEquals(expected,a+b);
-}
-17. @MethodSource
-@MethodSource("numbers")
-
-Supplies test data from a method.
-
-18. @EnumSource
-
-Useful for enums.
-
-19. Assumptions
-
-Skip tests based on conditions.
-
-assumeTrue(true);
-20. Nested Tests
-@Nested
-class AdditionTests{
-
-}
-
-Groups related tests.
-
-21. Test Order
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Order(1)
-22. Timeout
-assertTimeout(Duration.ofSeconds(2),()->{
-
-});
-23. Exception Testing
-assertThrows(
-    IllegalArgumentException.class,
-    ()->{
-        throw new IllegalArgumentException();
-    }
-);
-24. Tags
-@Tag("Smoke")
-@Tag("Regression")
-
-Run selected categories of tests.
-
-25. Conditional Tests
+- `assertEquals(expected, actual)` — compare values.
+- `assertNotEquals(expected, actual)`
+- `assertTrue(condition)` / `assertFalse(condition)`
+- `assertNull(obj)` / `assertNotNull(obj)`
+- `assertSame(expected, actual)` / `assertNotSame(expected, actual)`
+- `assertArrayEquals(expectedArray, actualArray)`
+- `assertIterableEquals(expected, actual)`
+- `assertThrows(Exception.class, () -> { /* code */ })` — verify exceptions.
+- `assertDoesNotThrow(() -> { /* code */ })`
+- `assertAll(...)` — group multiple assertions and report all failures together.
 
 Examples:
 
-@EnabledOnOs(OS.WINDOWS)
-@DisabledOnOs(OS.LINUX)
-@EnabledOnJre(JRE.JAVA_21)
-26. Test Instance Lifecycle
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+```java
+assertThrows(ArithmeticException.class, () -> { int x = 1 / 0; });
+assertAll(
+    () -> assertEquals(10, sum),
+    () -> assertTrue(age > 18),
+    () -> assertNotNull(name)
+);
+```
 
-Allows non-static @BeforeAll.
+## Lifecycle Annotations
 
-27. Dynamic Tests
-@TestFactory
+- `@BeforeEach` — runs before every test method.
+- `@AfterEach` — runs after every test method.
+- `@BeforeAll` — runs once before all tests (static by default unless using `@TestInstance(PER_CLASS)`).
+- `@AfterAll` — runs once after all tests (static by default unless using `@TestInstance(PER_CLASS)`).
+- `@DisplayName("...")` — human-readable test name.
+- `@Disabled` — skip a test.
 
-Generates tests at runtime.
+Execution order (simple view):
 
-28. Mockito with JUnit
+```
+@BeforeAll
+  @BeforeEach
+    test1
+  @AfterEach
+  @BeforeEach
+    test2
+  @AfterEach
+@AfterAll
+```
 
-Mockito creates fake objects for dependencies.
+## Parameterized Tests
+
+Run the same test with different inputs:
+
+- `@ValueSource` — simple values.
+- `@CsvSource` — multiple arguments per row.
+- `@MethodSource` — supply a stream or collection from a factory method.
+- `@EnumSource` — provide enum values.
 
 Example:
 
+```java
+@ParameterizedTest
+@CsvSource({"2,3,5", "5,6,11", "10,20,30"})
+void testAdd(int a, int b, int expected) {
+    assertEquals(expected, a + b);
+}
+```
+
+## Other Useful Features
+
+- Assumptions: `assumeTrue(condition)` — skip tests conditionally.
+- `@Nested` — group related tests.
+- Test ordering: `@TestMethodOrder(...)` and `@Order(...)` (use sparingly).
+- Timeouts: `assertTimeout(Duration.ofSeconds(2), () -> { ... })`.
+- Conditional execution: `@EnabledOnOs`, `@DisabledOnOs`, `@EnabledOnJre`, etc.
+- Dynamic tests: `@TestFactory` to create tests at runtime.
+
+## Mockito and Spring Boot Testing
+
+- Mockito for mocking dependencies:
+
+```java
 @Mock
-UserRepository repository;
+UserRepository repo;
 
 @InjectMocks
 UserService service;
-29. Spring Boot Testing
+```
 
-For Spring Boot:
+- Spring Boot testing slices:
 
-@SpringBootTest
+  - `@SpringBootTest` — full integration test with context.
+  - `@WebMvcTest` — controller slice tests.
+  - `@DataJpaTest` — JPA repository tests.
 
-or
+Use Mockito (or MockBean in Spring tests) to isolate units from external systems like databases or HTTP APIs.
 
-@WebMvcTest
+## Best Practices
 
-or
+- Each test should verify one behavior.
+- Give tests clear, descriptive names (use `@DisplayName` when helpful).
+- Keep tests independent and repeatable.
+- Use `@BeforeEach` to avoid duplication.
+- Prefer parameterized tests over repeating similar test cases.
+- Mock slow or external dependencies.
+- Aim for meaningful code coverage, but prioritize valuable tests over high coverage numbers.
 
-@DataJpaTest
-30. Code Coverage
+## Common Interview Questions
 
-Use tools like JaCoCo to measure tested code.
+- What is JUnit and why is it used?
+- Differences between JUnit 4 and JUnit 5.
+- What is a unit test vs. integration test?
+- Explain `@Test`, `@BeforeEach`, `@BeforeAll`, `@ParameterizedTest`.
+- How to test exceptions (`assertThrows`) and timeouts.
+- Difference between `assertEquals()` and `assertSame()`.
+- What is mocking and how does Mockito work?
+- How to test a Spring Boot REST API?
+- What is Test-Driven Development (TDD)?
 
-Example:
+## Learning Path (Suggested)
 
-Coverage
+1. JUnit basics and project setup
+2. `@Test` and assertions
+3. Lifecycle annotations
+4. Exception testing and timeouts
+5. Parameterized tests and `@Nested`
+6. Organizing tests with tags and ordering
+7. Mockito for dependency mocking
+8. Spring Boot testing slices
+9. Code coverage tools (e.g., JaCoCo)
 
-Lines : 90%
+---
 
-Branches : 82%
+If you'd like, I can also:
 
-Methods : 95%
-31. Best Practices
-One test should verify one behavior.
-Give tests meaningful names.
-Keep tests independent.
-Use @BeforeEach to avoid duplicate setup.
-Prefer parameterized tests over repeated code.
-Mock external dependencies like databases and APIs.
-32. JUnit Interview Questions
-What is JUnit?
-Why is JUnit used?
-Difference between JUnit 4 and JUnit 5?
-What is a unit test?
-What is @Test?
-Explain assertions.
-Difference between assertEquals() and assertSame().
-What is assertThrows()?
-Difference between @BeforeEach and @BeforeAll.
-What is @ParameterizedTest?
-What is @RepeatedTest?
-What is @Nested?
-What is @Disabled?
-What are Tags?
-What is Mockito?
-What is code coverage?
-What is TDD?
-What is mocking?
-What is integration testing?
-How do you test a Spring Boot REST API?
-Learning order for interviews
-JUnit basics and project setup
-@Test and assertions
-Lifecycle annotations (@BeforeEach, @AfterEach, @BeforeAll, @AfterAll)
-Exception testing with assertThrows
-Parameterized tests (@ValueSource, @CsvSource, @MethodSource)
-Test organization (@DisplayName, @Nested, @Tag, ordering)
-Timeouts, assumptions, and conditional tests
-Mockito for mocking dependencies
-Spring Boot testing (@SpringBootTest, @WebMvcTest, @DataJpaTest)
-Code coverage with JaCoCo
+- Add badges (build, coverage) and a CONTRIBUTING section.
+- Split examples into a `docs/` folder or add runnable sample project structure.
 
-For most Java backend fresher interviews, mastering topics through parameterized tests and having a working knowledge of Mockito and Spring Boot testing will put you in a strong position.
