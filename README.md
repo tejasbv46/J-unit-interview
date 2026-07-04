@@ -225,7 +225,7 @@ Use Mockito (or MockBean in Spring tests) to isolate units from external systems
 8. Spring Boot testing slices
 9. Code coverage tools (e.g., JaCoCo)
 
----
+
 
 If you'd like, I can also:
 
